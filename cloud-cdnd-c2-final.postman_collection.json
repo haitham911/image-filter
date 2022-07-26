@@ -1,0 +1,183 @@
+{
+	"info": {
+		"_postman_id": "88d38a50-4635-42de-9df0-5927b041ba0e",
+		"name": "cloud-cdnd-c2-final",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13489311"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8082/filteredimage?image_url=https://timedotcom.files.wordpress.com/2019/03/kitten-report.jpg",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}/filteredimage?image_url=https://media.geeksforgeeks.org/wp-content/uploads/20190328185307/gfg28.png",
+					"host": [
+						"{{HOST}}"
+					],
+					"path": [
+						"filteredimage"
+					],
+					"query": [
+						{
+							"key": "image_url",
+							"value": "https://media.geeksforgeeks.org/wp-content/uploads/20190328185307/gfg28.png"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8082/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "http://image-filter-dev-dev22.us-east-1.elasticbeanstalk.com",
+					"protocol": "http",
+					"host": [
+						"image-filter-dev-dev22",
+						"us-east-1",
+						"elasticbeanstalk",
+						"com"
+					]
+				},
+				"description": "Post a new item to the feed"
+			},
+			"response": []
+		},
+		{
+			"name": "/api/v0/user/auth/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"body includes an email and token\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.auth).to.eql(true);",
+							"    pm.expect(jsonData.user).to.not.eql(null);",
+							"    pm.expect(jsonData.token).to.not.eql(null)",
+							"    ",
+							"    pm.environment.set(\"token\", jsonData.token);",
+							"    pm.collectionVariables.set(\"token\", jsonData.token);",
+							"});",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"hello@gmail.com\",\n\t\"password\":\"fancypass\"\n}"
+				},
+				"url": {
+					"raw": "{{AUTH}}/api/v0/users/auth/login",
+					"host": [
+						"{{AUTH}}"
+					],
+					"path": [
+						"api",
+						"v0",
+						"users",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "HOST",
+			"value": "localhost:8082",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "AUTH",
+			"value": "http://rutener-dev-dev.us-east-1.elasticbeanstalk.com",
+			"type": "string"
+		}
+	]
+}
